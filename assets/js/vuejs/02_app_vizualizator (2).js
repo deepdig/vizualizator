@@ -33,9 +33,8 @@ Vue.component('vizualizator', {
                             opacity: 0,                            
                             closed: true,
                             fillPatternImage: false,
-                            fillPriority: 'pattern',
-                            dashEnabled: false,//флаг активного цвета
-                            isActive: false//флаг активного полигона
+                            dashEnabled: false,                            
+                            isActive: false                           
                         },                        
                     },
                     {
@@ -73,7 +72,9 @@ Vue.component('vizualizator', {
         methods: {
             //мышь над объектом
             handleMouseOver(event) {
-                const shape = event.getStage();                
+                const shape = event.getStage();
+                //dump(shape);
+                //alert(shape._id);
                 if (shape.attrs.isActive != true && shape.attrs.dashEnabled == false) {                    
                     shape.setOpacity(0.5).setStroke('red').setFill('#fff');
                     shape.getStage().draw();
@@ -135,7 +136,6 @@ Vue.component('vizualizator', {
             },
             //изменение материала (текстуры) полигона
             changeMaterial(e) {
-                //const stage = this.$refs.stage.getStage();
                 //получаем слой
                 const layer = this.$refs.layer.getStage();
                 //создаем массив из объектов в слое
@@ -151,13 +151,13 @@ Vue.component('vizualizator', {
 
                         //создаем image (текстуру)
                         var imageObj = new Image();
-                        imageObj.src = 'assets/img/materials/Bradshaw.jpg';
-                        
+                        imageObj.src = 'assets/img/fon.jpg';
+                        activePolygon.setFillPatternImage(imageObj);
                         activePolygon.setFill(false).setOpacity(0.6);
-                        activePolygon.setFillPatternImage(imageObj);                        
+                        
                         //Устанавливаем флаг активного цвета
-                        activePolygon.setDashEnabled(true);
-                        layer.draw();                        
+                        activePolygon.setDashEnabled(true),
+                        layer.draw();
                     }
                 }                
             },
