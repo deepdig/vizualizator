@@ -31,9 +31,7 @@ Vue.component('vizualizator', {
                             points: [49,210, 170,205, 475,300, 475,330, 250,375, 49,224, 49,210],
                             tension: 0,
                             opacity: 0,                            
-                            closed: true,
-                            //fillPatternImage: false,
-                            //fillPriority: 'pattern',
+                            closed: true,                            
                             dashEnabled: false,//флаг активного цвета
                             isActive: false//флаг активного полигона
                         },                        
@@ -47,9 +45,7 @@ Vue.component('vizualizator', {
                             points: [170,205, 475,300, 475,308, 633,280, 633,275, 262,200],
                             tension: 0,
                             opacity: 0,                            
-                            closed: true,
-                            //fillPatternImage: false,
-                            //fillPriority: 'pattern',
+                            closed: true,                                                        
                             dashEnabled: false,
                             isActive: false                            
                         },                        
@@ -85,7 +81,7 @@ Vue.component('vizualizator', {
             handleMouseOut: function (event) {
                 const shape = event.getStage();
                 if (shape.attrs.isActive != true && shape.attrs.dashEnabled == false) {
-                    shape.setOpacity(0);
+                    shape.setOpacity(0).setStroke(false);
                     shape.getStage().draw();
                 }
                 document.body.style.cursor = 'default';
@@ -101,11 +97,12 @@ Vue.component('vizualizator', {
                 for (key = 0; key < polygonArr.length; ++key) {
                     //сбрасываем флаг и выделение у всех полигонов                    
                     polygonArr[key].attrs.isActive = false;
+                    polygonArr[key].setStroke(false);
                     if (polygonArr[key].attrs.dashEnabled == false) {
                         polygonArr[key].setOpacity(0).setFill();
                     }                    
                     //устанавливаем флаг и выделение активного полигона                                
-                    shape.setOpacity(0.3).setFill('red');                    
+                    shape.setOpacity(0.3).setFill('red').setStroke('red');                    
                     shape.attrs.isActive = true;                    
                     shape.getStage().draw();
                 }                
@@ -158,6 +155,7 @@ Vue.component('vizualizator', {
                         //применяем параметры
                         activePolygon.setFill(false).setOpacity(0.6);
                         activePolygon.setFillPatternImage(imageObj);
+                        activePolygon.setFillPatternX(0).setFillPatternY(80);
                         //Устанавливаем флаг активного цвета
                         activePolygon.setDashEnabled(true);
                         layer.draw();
