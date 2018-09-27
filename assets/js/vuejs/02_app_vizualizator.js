@@ -31,7 +31,7 @@ Vue.component('vizualizator', {
                             points: [49,210, 170,205, 475,300, 475,330, 250,375, 49,224, 49,210],
                             tension: 0,
                             opacity: 0,                            
-                            closed: true,                            
+                            closed: true,
                             dashEnabled: false,//флаг активного цвета
                             isActive: false//флаг активного полигона
                         },                        
@@ -149,13 +149,15 @@ Vue.component('vizualizator', {
                         //получаем фон элемента
                         var computedStyle = getComputedStyle(e.target);                    
                         var backgroundUrl = computedStyle.backgroundImage.slice(4, -1).replace(/"/g, "");                        
-                        //создаем image (текстуру)
+                        //создаем image (текстуру, паттерн)
                         var imageObj = new Image();
                         imageObj.src = backgroundUrl;                        
-                        //применяем параметры
-                        activePolygon.setFill(false).setOpacity(0.6);
+                        //применяем параметры к паттернам
+                        activePolygon.setFill(false).setOpacity(0.5);
                         activePolygon.setFillPatternImage(imageObj);
-                        activePolygon.setFillPatternX(0).setFillPatternY(80);
+                        activePolygon.setFillPatternY(80);//смещение паттерна для скрытия швов
+                        activePolygon.setFillPatternScaleX(0.7).setFillPatternScaleY(1);//масштабирование
+                        activePolygon.setFillPatternRotation(0);//вращение
                         //Устанавливаем флаг активного цвета
                         activePolygon.setDashEnabled(true);
                         layer.draw();
@@ -183,3 +185,4 @@ Vue.component('vizualizator', {
         el: '#app',
 
     })
+    
