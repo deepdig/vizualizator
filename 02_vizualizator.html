@@ -22,7 +22,10 @@
                     </v-layer>
 
                     <v-layer ref="layer">
-                        <v-line ref="line" v-for="item in poligonsArr" :key="item.id" :config="item.config"
+                        <v-line ref="line" 
+                            v-for="item in poligonsArr" 
+                            :key="item.id" 
+                            :config="item.config"
                             @mouseover="handleMouseOver" 
                             @mouseout="handleMouseOut" 
                             @click="handleMouseClick" 
