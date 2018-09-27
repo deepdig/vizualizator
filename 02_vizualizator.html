@@ -18,7 +18,7 @@
                 <v-stage ref="stage" :config="configKonva">
 
                     <v-layer ref="layer">
-                        <v-image :config="configImg"></v-image>
+                        <v-image :config="backgroundImg"></v-image>
                     </v-layer>
 
                     <v-layer ref="layer">
@@ -40,7 +40,9 @@
                     <button v-on:click="changeColor" class="material-select material-1" id="material-1"> </button>
                     <button v-on:click="changeColor" class="material-select material-2" id="material-2"> </button>
                     <button v-on:click="changeColor" class="material-select material-3" id="material-3"> </button>
-                    <button v-on:click="changeMaterial" class="material-select" id="material-4">Тек.</button>
+                    <button v-on:click="changeMaterial" class="material-select material-4" id="material-4" style="background: url(assets/img/materials/Bradshaw.jpg);"> </button>
+                    <button v-on:click="changeMaterial" class="material-select material-4" style="background: url(assets/img/materials/Zirix.jpg);"> </button>
+                    <button v-on:click="changeMaterial" class="material-select material-4" style="background: url(assets/img/materials/CK230_Mykonos_Beige.jpg);"> </button>
                     <button v-on:click="resetColor" class="material-select" id="material-reset">Сброс</button>
                 </div>
             </div>

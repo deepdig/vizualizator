@@ -16,7 +16,7 @@ Vue.component('vizualizator', {
         template: '#vizualizator-template',
         data() {
             return {
-                backgroundImg: new Image(100, 100),                
+                Image: new Image(),                
                 configKonva: {
                     width: 800,
                     height: 450
@@ -25,15 +25,15 @@ Vue.component('vizualizator', {
                     {
                         id: 1,                        
                         config: {
-                            name: 'Полигон 1',
+                            name: 'Полигон 1',                              
                             x: 0,
                             y: 0,
                             points: [49,210, 170,205, 475,300, 475,330, 250,375, 49,224, 49,210],
                             tension: 0,
                             opacity: 0,                            
                             closed: true,
-                            fillPatternImage: false,
-                            fillPriority: 'pattern',
+                            //fillPatternImage: false,
+                            //fillPriority: 'pattern',
                             dashEnabled: false,//флаг активного цвета
                             isActive: false//флаг активного полигона
                         },                        
@@ -48,7 +48,8 @@ Vue.component('vizualizator', {
                             tension: 0,
                             opacity: 0,                            
                             closed: true,
-                            fillPatternImage: false,
+                            //fillPatternImage: false,
+                            //fillPriority: 'pattern',
                             dashEnabled: false,
                             isActive: false                            
                         },                        
@@ -58,12 +59,12 @@ Vue.component('vizualizator', {
         },
         computed: {
             //построение фоновой картинки
-            configImg: function () {
-                this.backgroundImg.src = 'assets/img/background/kitchen-background.jpg';
+            backgroundImg: function () {
+                this.Image.src = 'assets/img/background/kitchen-background.jpg';
                 return {
                     x: 0,
                     y: 0,
-                    image: this.backgroundImg,
+                    image: this.Image,
                     width: 800,
                     height: 450,
                 }
@@ -73,7 +74,7 @@ Vue.component('vizualizator', {
         methods: {
             //мышь над объектом
             handleMouseOver(event) {
-                const shape = event.getStage();                
+                const shape = event.getStage();
                 if (shape.attrs.isActive != true && shape.attrs.dashEnabled == false) {                    
                     shape.setOpacity(0.5).setStroke('red').setFill('#fff');
                     shape.getStage().draw();
@@ -135,7 +136,7 @@ Vue.component('vizualizator', {
             },
             //изменение материала (текстуры) полигона
             changeMaterial(e) {
-                //const stage = this.$refs.stage.getStage();
+                const stage = this.$refs.stage.getStage();
                 //получаем слой
                 const layer = this.$refs.layer.getStage();
                 //создаем массив из объектов в слое
@@ -146,18 +147,20 @@ Vue.component('vizualizator', {
                 for (key = 0; key < polygonArr.length; ++key) {
                     var activePolygon = polygonArr[key];
                     var activeFlag = activePolygon.attrs.isActive;                    
-
+                    
                     if (activeFlag == true) {
-
+                        //получаем фон элемента
+                        var computedStyle = getComputedStyle(e.target);                    
+                        var backgroundUrl = computedStyle.backgroundImage.slice(4, -1).replace(/"/g, "");                        
                         //создаем image (текстуру)
                         var imageObj = new Image();
-                        imageObj.src = 'assets/img/materials/Bradshaw.jpg';
-                        
+                        imageObj.src = backgroundUrl;                        
+                        //применяем параметры
                         activePolygon.setFill(false).setOpacity(0.6);
-                        activePolygon.setFillPatternImage(imageObj);                        
+                        activePolygon.setFillPatternImage(imageObj);
                         //Устанавливаем флаг активного цвета
                         activePolygon.setDashEnabled(true);
-                        layer.draw();                        
+                        layer.draw();
                     }
                 }                
             },
