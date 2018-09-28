@@ -16,7 +16,7 @@ Vue.component('vizualizator', {
         template: '#vizualizator-template',
         data() {
             return {
-                backgroundImg: new Image(100, 100),                
+                Image: new Image(),                
                 configKonva: {
                     width: 800,
                     height: 450
@@ -25,16 +25,24 @@ Vue.component('vizualizator', {
                     {
                         id: 1,                        
                         config: {
-                            name: 'Полигон 1',
+                            name: 'Полигон 1',                              
                             x: 0,
                             y: 0,
-                            points: [49,210, 170,205, 475,300, 475,330, 250,375, 49,224, 49,210],
+                            points: [
+                                49,222, 
+                                162,217, 
+                                475,320, 
+                                475,347, 
+                                252,398, 
+                                49,234, 
+                                49,222
+                            ],
                             tension: 0,
-                            opacity: 0,                            
+                            opacity: 0,
+                            //stroke: 'red',
                             closed: true,
-                            fillPatternImage: false,
-                            dashEnabled: false,                            
-                            isActive: false                           
+                            dashEnabled: false,//флаг активного цвета
+                            isActive: false//флаг активного полигона
                         },                        
                     },
                     {
@@ -43,28 +51,71 @@ Vue.component('vizualizator', {
                             name: 'Полигон 2',
                             x: 0,
                             y: 0,
-                            points: [170,205, 475,300, 475,308, 633,280, 633,275, 262,200],
-                            tension: 0,
-                            opacity: 0,                            
-                            closed: true,
-                            fillPatternImage: false,
+                            points: [
+                                162,216, 
+                                475,322, 
+                                476,329, 
+                                634,294, 
+                                634,287, 
+                                262,210,
+                                257,210,
+                                258,222,
+                                256,234,
+                                233,235,
+                                227,227,
+                                226,222,
+                                223,229,
+                                210,229,
+                                202,226,
+                                200,222,
+                                199,214,
+                                175,215,
+                            ],
+                            tension: 0.2,//сглаживание линий
+                            bezier: false,
+                            opacity: 1,
+                            stroke: 'red',
+                            strokeWidth: 2,//толщина границы выделения
+                            closed: true,                                                        
                             dashEnabled: false,
                             isActive: false                            
                         },                        
                     }
-                ] //end poligonsArr
+                ], //end poligonsArr
+                imagesArr: [
+                    {
+                        id: 1,                        
+                        config: {
+                            name: 'Image 01',
+                            x: 0,
+                            y: 0,                                             
+                            opacity: 1,                            
+                            isActive: false                            
+                        }, 
+                    },
+                    {
+                        id: 2,                        
+                        config: {
+                            name: 'Image 02',
+                            x: 0,
+                            y: 0,                                             
+                            opacity: 1,                            
+                            isActive: false                            
+                        },  
+                    }
+                ], //end imagesArr
             }
         },
         computed: {
             //построение фоновой картинки
-            configImg: function () {
-                this.backgroundImg.src = 'assets/img/background/kitchen-background.jpg';
+            backgroundImg: function () {
+                this.Image.src = 'assets/img/background/kitchen-background.png';
                 return {
                     x: 0,
                     y: 0,
-                    image: this.backgroundImg,
+                    image: this.Image,
                     width: 800,
-                    height: 450,
+                    height: 477,
                 }
             },
         },
@@ -73,10 +124,8 @@ Vue.component('vizualizator', {
             //мышь над объектом
             handleMouseOver(event) {
                 const shape = event.getStage();
-                //dump(shape);
-                //alert(shape._id);
                 if (shape.attrs.isActive != true && shape.attrs.dashEnabled == false) {                    
-                    shape.setOpacity(0.5).setStroke('red').setFill('#fff');
+                    shape.setOpacity(0.2).setStroke('red').setFill('red');
                     shape.getStage().draw();
                 }
                 document.body.style.cursor = 'pointer';
@@ -85,7 +134,7 @@ Vue.component('vizualizator', {
             handleMouseOut: function (event) {
                 const shape = event.getStage();
                 if (shape.attrs.isActive != true && shape.attrs.dashEnabled == false) {
-                    shape.setOpacity(0);
+                    shape.setOpacity(0).setStroke(false);
                     shape.getStage().draw();
                 }
                 document.body.style.cursor = 'default';
@@ -101,11 +150,12 @@ Vue.component('vizualizator', {
                 for (key = 0; key < polygonArr.length; ++key) {
                     //сбрасываем флаг и выделение у всех полигонов                    
                     polygonArr[key].attrs.isActive = false;
+                    polygonArr[key].setStroke(false);
                     if (polygonArr[key].attrs.dashEnabled == false) {
                         polygonArr[key].setOpacity(0).setFill();
                     }                    
                     //устанавливаем флаг и выделение активного полигона                                
-                    shape.setOpacity(0.3).setFill('red');                    
+                    shape.setOpacity(0.3).setFill('red').setStroke('red');                    
                     shape.attrs.isActive = true;                    
                     shape.getStage().draw();
                 }                
@@ -136,6 +186,7 @@ Vue.component('vizualizator', {
             },
             //изменение материала (текстуры) полигона
             changeMaterial(e) {
+                const stage = this.$refs.stage.getStage();
                 //получаем слой
                 const layer = this.$refs.layer.getStage();
                 //создаем массив из объектов в слое
@@ -146,17 +197,22 @@ Vue.component('vizualizator', {
                 for (key = 0; key < polygonArr.length; ++key) {
                     var activePolygon = polygonArr[key];
                     var activeFlag = activePolygon.attrs.isActive;                    
-
+                    
                     if (activeFlag == true) {
-
-                        //создаем image (текстуру)
+                        //получаем фон элемента
+                        var computedStyle = getComputedStyle(e.target);                    
+                        var backgroundUrl = computedStyle.backgroundImage.slice(4, -1).replace(/"/g, "");                        
+                        //создаем image (текстуру, паттерн)
                         var imageObj = new Image();
-                        imageObj.src = 'assets/img/fon.jpg';
+                        imageObj.src = backgroundUrl;                        
+                        //применяем параметры к паттернам
+                        activePolygon.setFill(false).setOpacity(0.5);
                         activePolygon.setFillPatternImage(imageObj);
-                        activePolygon.setFill(false).setOpacity(0.6);
-                        
+                        //activePolygon.setFillPatternY(80);//смещение паттерна для скрытия швов
+                        //activePolygon.setFillPatternScaleX(1).setFillPatternScaleY(1);//масштабирование
+                        //activePolygon.setFillPatternRotation(0);//вращение
                         //Устанавливаем флаг активного цвета
-                        activePolygon.setDashEnabled(true),
+                        activePolygon.setDashEnabled(true);
                         layer.draw();
                     }
                 }                
@@ -182,3 +238,4 @@ Vue.component('vizualizator', {
         el: '#app',
 
     })
+    
