@@ -28,7 +28,15 @@ Vue.component('vizualizator', {
                             name: 'Полигон 1',                              
                             x: 0,
                             y: 0,
-                            points: [49,210, 170,205, 475,300, 475,330, 250,375, 49,224, 49,210],
+                            points: [
+                                49,210, 
+                                170,205, 
+                                475,300, 
+                                475,330, 
+                                250,375, 
+                                49,224, 
+                                49,210
+                            ],
                             tension: 0,
                             opacity: 0,                            
                             closed: true,
@@ -42,9 +50,30 @@ Vue.component('vizualizator', {
                             name: 'Полигон 2',
                             x: 0,
                             y: 0,
-                            points: [170,205, 475,300, 475,308, 633,280, 633,275, 262,200],
-                            tension: 0,
-                            opacity: 0,                            
+                            points: [
+                                162,204, 
+                                474,300, 
+                                475,309, 
+                                634,282, 
+                                634,275, 
+                                262,198,
+                                257,198,
+                                258,210,
+                                256,222,
+                                233,223,
+                                227,215,
+                                226,210,
+                                223,217,
+                                210,217,
+                                202,214,
+                                200,210,
+                                199,202,
+                                175,203,
+                            ],
+                            tension: 0.2,//сглаживание линий
+                            bezier: false,
+                            opacity: 0,
+                            strokeWidth: 2,//толщина границы выделения
                             closed: true,                                                        
                             dashEnabled: false,
                             isActive: false                            
@@ -56,7 +85,7 @@ Vue.component('vizualizator', {
         computed: {
             //построение фоновой картинки
             backgroundImg: function () {
-                this.Image.src = 'assets/img/background/kitchen-background.jpg';
+                this.Image.src = 'assets/img/background/kitchen-background.png';
                 return {
                     x: 0,
                     y: 0,
@@ -72,7 +101,7 @@ Vue.component('vizualizator', {
             handleMouseOver(event) {
                 const shape = event.getStage();
                 if (shape.attrs.isActive != true && shape.attrs.dashEnabled == false) {                    
-                    shape.setOpacity(0.5).setStroke('red').setFill('#fff');
+                    shape.setOpacity(0.2).setStroke('red').setFill('red');
                     shape.getStage().draw();
                 }
                 document.body.style.cursor = 'pointer';
