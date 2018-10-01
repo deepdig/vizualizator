@@ -5,7 +5,7 @@ function dump(obj) {
         out += i + ": " + obj[i] + "\n";
     }
 
-    alert(out);    
+    //alert(out);    
 
     var pre = document.createElement('pre');
     pre.innerHTML = out;
@@ -20,7 +20,8 @@ Vue.component('vizualizator', {
                 configKonva: {
                     width: 800,
                     height: 450
-                },                
+                },
+                success: false,//ответ сервера на запрос файлов
                 poligonsArr: [
                     {
                         id: 1,                        
@@ -54,9 +55,9 @@ Vue.component('vizualizator', {
                             points: [
                                 162,216, 
                                 475,322, 
-                                476,329, 
-                                634,294, 
-                                634,287, 
+                                476,328, 
+                                634,299, 
+                                634,290, 
                                 262,210,
                                 257,210,
                                 258,222,
@@ -73,37 +74,15 @@ Vue.component('vizualizator', {
                             ],
                             tension: 0.2,//сглаживание линий
                             bezier: false,
-                            opacity: 1,
-                            stroke: 'red',
+                            opacity: 0,
+                            //stroke: 'red',
                             strokeWidth: 2,//толщина границы выделения
                             closed: true,                                                        
                             dashEnabled: false,
                             isActive: false                            
                         },                        
                     }
-                ], //end poligonsArr
-                imagesArr: [
-                    {
-                        id: 1,                        
-                        config: {
-                            name: 'Image 01',
-                            x: 0,
-                            y: 0,                                             
-                            opacity: 1,                            
-                            isActive: false                            
-                        }, 
-                    },
-                    {
-                        id: 2,                        
-                        config: {
-                            name: 'Image 02',
-                            x: 0,
-                            y: 0,                                             
-                            opacity: 1,                            
-                            isActive: false                            
-                        },  
-                    }
-                ], //end imagesArr
+                ], //end poligonsArr                
             }
         },
         computed: {
@@ -215,7 +194,7 @@ Vue.component('vizualizator', {
                         activePolygon.setDashEnabled(true);
                         layer.draw();
                     }
-                }                
+                }
             },
             //сброс цвета полигона
             resetColor(e) {
@@ -231,6 +210,45 @@ Vue.component('vizualizator', {
                     layer.draw();
                 }
             },
+
+            //---AXIOS--- Изменение текстуры
+            getFiles () {
+                /*
+                //получаем слой
+                const layer = this.$refs.layer.getStage();
+                //создаем массив из объектов в слое
+                polygonArr = layer.children;
+
+                //перебираем полигоны, если активный то применяем цвет
+                var key;
+                for (key = 0; key < polygonArr.length; ++key) {
+                    var activePolygon = polygonArr[key];
+                    var activeFlag = activePolygon.attrs.isActive;                    
+                    
+                    if (activeFlag == true) {
+                        //получаем фон элемента
+                                            
+                        //создаем image (текстуру, паттерн)
+                        var imageObj = new Image();
+                        imageObj.src = backgroundUrl;                        
+                        //применяем параметры к паттернам
+                        activePolygon.setFill(false).setOpacity(0.5);
+                        activePolygon.setFillPatternImage(imageObj);                        
+                        //Устанавливаем флаг активного цвета
+                        activePolygon.setDashEnabled(true);
+                        layer.draw();
+                    }
+                }
+                */
+                data = {
+                    name : this.name,    // где name переменная vue                
+                };
+                
+                axios.post('../../../ajax/getFolder.php', data)
+                .then(response => (this.success = response.data))
+                .catch(error => (this.success = error.response.data));
+            }
+            //---end.AXIOS---
         }
     }),
 
