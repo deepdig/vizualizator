@@ -21,7 +21,7 @@ Vue.component('vizualizator', {
                     width: 800,
                     height: 450
                 },
-                success: false,//ответ сервера на запрос файлов
+                success: null,//ответ сервера на запрос файлов                
                 poligonsArr: [
                     {
                         id: 1,                        
@@ -78,8 +78,8 @@ Vue.component('vizualizator', {
                             //stroke: 'red',
                             strokeWidth: 2,//толщина границы выделения
                             closed: true,                                                        
-                            dashEnabled: false,
-                            isActive: false                            
+                            dashEnabled: false,//флаг активного цвета
+                            isActive: false//флаг активного полигона
                         },                        
                     }
                 ], //end poligonsArr                
@@ -211,44 +211,46 @@ Vue.component('vizualizator', {
                 }
             },
 
-            //---AXIOS--- Изменение текстуры
-            getFiles () {
-                /*
+            //изменение фото полигона
+            getFiles () {                
                 //получаем слой
                 const layer = this.$refs.layer.getStage();
                 //создаем массив из объектов в слое
                 polygonArr = layer.children;
 
-                //перебираем полигоны, если активный то применяем цвет
+                //перебираем полигоны, если активный то применяем текстуру
                 var key;
                 for (key = 0; key < polygonArr.length; ++key) {
                     var activePolygon = polygonArr[key];
-                    var activeFlag = activePolygon.attrs.isActive;                    
+                    var activeFlag = activePolygon.attrs.isActive;    
                     
                     if (activeFlag == true) {
-                        //получаем фон элемента
-                                            
-                        //создаем image (текстуру, паттерн)
-                        var imageObj = new Image();
-                        imageObj.src = backgroundUrl;                        
-                        //применяем параметры к паттернам
-                        activePolygon.setFill(false).setOpacity(0.5);
-                        activePolygon.setFillPatternImage(imageObj);                        
-                        //Устанавливаем флаг активного цвета
-                        activePolygon.setDashEnabled(true);
-                        layer.draw();
+                        
+                        //---AXIOS--- Запрос списка файлов с сервера
+                        data = {
+                            key : key,    // где name переменная vue (будем использовать для запроса нужных текстур)                
+                        };
+                        
+                        axios.post('../../../ajax/getFolder.php', data)
+                        .then(function (response) {
+                            // handle success
+                            var fileName = response.data;                            
+                            //создаем image (текстуру, паттерн)
+                            var imageObj = new Image();
+                            alert(fileName);
+                            imageObj.src = 'assets/img/objects/'+fileName;                                
+                            activePolygon.setFillPatternImage(imageObj);
+                            //применяем параметры к паттернам
+                            activePolygon.setFill(false).setOpacity(0.5);
+                            //Устанавливаем флаг активного цвета
+                            activePolygon.setDashEnabled(true);
+                            layer.draw();
+                        })
+                        .catch(error => (this.success = error.response.data));
+                        //---end.AXIOS---
                     }
                 }
-                */
-                data = {
-                    name : this.name,    // где name переменная vue                
-                };
-                
-                axios.post('../../../ajax/getFolder.php', data)
-                .then(response => (this.success = response.data))
-                .catch(error => (this.success = error.response.data));
-            }
-            //---end.AXIOS---
+            }//---end.getFiles            
         }
     }),
 
