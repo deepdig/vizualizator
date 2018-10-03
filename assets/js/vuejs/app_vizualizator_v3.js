@@ -96,7 +96,7 @@ Vue.component('vizualizator', {
                     width: 800,
                     height: 477,
                 }
-            },
+            }
         },
 
         methods: {
@@ -163,7 +163,7 @@ Vue.component('vizualizator', {
                     }
                 }                
             },
-            //изменение материала (текстуры) полигона
+            //изменение полигона наложением паттернов (текстур)
             changeMaterial(e) {
                 const stage = this.$refs.stage.getStage();
                 //получаем слой
@@ -196,6 +196,34 @@ Vue.component('vizualizator', {
                     }
                 }
             },
+
+            //изменение полигона наложением фотографий элементов
+            changePhoto () {                
+                //получаем слой
+                const layer = this.$refs.layer.getStage();
+                //создаем массив из объектов в слое
+                polygonArr = layer.children;
+
+                //перебираем полигоны, если активный то применяем текстуру
+                var key;
+                for (key = 0; key < polygonArr.length; ++key) {
+                    var activePolygon = polygonArr[key];
+                    var activeFlag = activePolygon.attrs.isActive;    
+                    
+                    if (activeFlag == true) {
+                        //применяем параметры к паттернам
+                        activePolygon.setFill(false).setOpacity(0.5);
+                        //Устанавливаем флаг активного цвета
+                        activePolygon.setDashEnabled(true);
+                        
+                        var imageObj = new Image();                        
+                        imageObj.src = 'assets/img/objects/'+key+'_pattern.png';
+                        activePolygon.setFillPatternImage(imageObj);
+                        layer.draw();
+                    }
+                }
+            },//---end.getFiles
+
             //сброс цвета полигона
             resetColor(e) {
                 const layer = this.$refs.layer.getStage();                
@@ -209,48 +237,7 @@ Vue.component('vizualizator', {
                     polygonArr[key].setDashEnabled(false);
                     layer.draw();
                 }
-            },
-
-            //изменение фото полигона
-            getFiles () {                
-                //получаем слой
-                const layer = this.$refs.layer.getStage();
-                //создаем массив из объектов в слое
-                polygonArr = layer.children;
-
-                //перебираем полигоны, если активный то применяем текстуру
-                var key;
-                for (key = 0; key < polygonArr.length; ++key) {
-                    var activePolygon = polygonArr[key];
-                    var activeFlag = activePolygon.attrs.isActive;    
-                    
-                    if (activeFlag == true) {
-                        
-                        //---AXIOS--- Запрос списка файлов с сервера
-                        data = {
-                            key : key,    // где name переменная vue (будем использовать для запроса нужных текстур)                
-                        };
-                        
-                        axios.post('../../../ajax/getFolder.php', data)
-                        .then(function (response) {
-                            // handle success
-                            var fileName = response.data;                            
-                            //создаем image (текстуру, паттерн)
-                            var imageObj = new Image();
-                            alert(fileName);
-                            imageObj.src = 'assets/img/objects/'+fileName;                                
-                            activePolygon.setFillPatternImage(imageObj);
-                            //применяем параметры к паттернам
-                            activePolygon.setFill(false).setOpacity(0.5);
-                            //Устанавливаем флаг активного цвета
-                            activePolygon.setDashEnabled(true);
-                            layer.draw();
-                        })
-                        .catch(error => (this.success = error.response.data));
-                        //---end.AXIOS---
-                    }
-                }
-            }//---end.getFiles            
+            },                
         }
     }),
 

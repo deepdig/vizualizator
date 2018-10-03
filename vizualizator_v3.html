@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <title>Визуализатор</title>
     <link rel="stylesheet" href="assets/css/vizualizator.css">
@@ -22,31 +23,37 @@
                     </v-layer>
 
                     <v-layer ref="layer">
-                        <v-line 
-                            ref="line" 
-                            v-for="item in poligonsArr" 
-                            :key="item.id" 
-                            :config="item.config"
-                            @mouseover="handleMouseOver" 
-                            @mouseout="handleMouseOut" 
-                            @click="handleMouseClick" 
-                        />
-                    </v-layer>                    
+                        <v-line ref="line" v-for="item in poligonsArr" :key="item.id" :config="item.config" @mouseover="handleMouseOver"
+                            @mouseout="handleMouseOut" @click="handleMouseClick" />
+                    </v-layer>
                 </v-stage>
             </div>
 
             <div class="toolbar">
 
                 <div class="toolbar-materials">
+                    <h3>Наложение цвета</h3>
                     <button v-on:click="changeColor" class="material-select material-1" id="material-1"> </button>
                     <button v-on:click="changeColor" class="material-select material-2" id="material-2"> </button>
                     <button v-on:click="changeColor" class="material-select material-3" id="material-3"> </button>
-                    <button v-on:click="changeMaterial" class="material-select material-4" id="material-4" style="background: url(assets/img/materials/Bradshaw.jpg);"> </button>
-                    <button v-on:click="changeMaterial" class="material-select material-5" style="background: url(assets/img/materials/Zirix.jpg);"> </button>
-                    <button v-on:click="changeMaterial" class="material-select material-6" style="background: url(assets/img/materials/CK230_Mykonos_Beige.jpg);"> </button>
-                    <button v-on:click="getFiles" class="material-select material-7">Файлы</button>                   
-                    
-                    <button v-on:click="changeMaterial" class="material-select material-6" style="background: url(assets/img/objects/table_green.jpg);">Фото</button>
+                </div>
+                <div class="toolbar-materials">
+                    <h3>Наложение паттернов</h3>
+                    <button v-on:click="changeMaterial" class="material-select material-4" id="material-4" style="background: url(assets/img/materials/Bradshaw.jpg);">
+                    </button>
+                    <button v-on:click="changeMaterial" class="material-select material-5" style="background: url(assets/img/materials/Zirix.jpg);">
+                    </button>
+                    <button v-on:click="changeMaterial" class="material-select material-6" style="background: url(assets/img/materials/CK230_Mykonos_Beige.jpg);">
+                    </button>
+                </div>
+                <div class="toolbar-materials">
+                    <h3>Наложение фотографий</h3>
+                    <button v-on:click="changeMaterial" class="material-select material-7" style="background: url(assets/img/objects/0_pattern.png);">Одно
+                        фото</button>
+                    <button v-on:click="changePhoto" class="material-select material-8">Файлы</button>
+                </div>
+                <div class="toolbar-materials">
+                    <h3>Общий сброс</h3>
                     <button v-on:click="resetColor" class="material-select" id="material-reset">Сброс</button>
                 </div>
             </div>
@@ -64,4 +71,5 @@
     "></script>
 
 </body>
+
 </html>
