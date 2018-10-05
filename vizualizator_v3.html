@@ -15,9 +15,11 @@
     <template id="vizualizator-template">
         <div id="vizualizator-app">
             <h1>Визуализатор</h1>
+            
+            <p v-for="(item, index) in imgArr" :id="'pattern-'+index"></p>
+            
             <div class="main-canvas">
                 <v-stage ref="stage" :config="configKonva">
-
                     <v-layer ref="layer">
                         <v-image :config="backgroundImg"></v-image>
                     </v-layer>
@@ -48,9 +50,9 @@
                 </div>
                 <div class="toolbar-materials">
                     <h3>Наложение фотографий</h3>
-                    <button v-on:click="changeMaterial" class="material-select material-7" style="background: url(assets/img/objects/0_pattern.png);">Одно
+                    <button v-on:click="changeMaterial" class="material-select material-7">Одно
                         фото</button>
-                    <button v-on:click="changePhoto" class="material-select material-8">Файлы</button>
+                    <button v-on:click="changePhoto" class="material-select material-8">Набор фото</button>
                 </div>
                 <div class="toolbar-materials">
                     <h3>Общий сброс</h3>

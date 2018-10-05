@@ -22,4 +22,6 @@
 #material-1 {background: red;}
 #material-2 {background: blue;}
 #material-3 {background: green;}
-/*#material-4 {background: url(../img/materials/Bradshaw.jpg);}*/
+/*Preloads images*/
+#pattern-0 {background: url(../img/objects/0_pattern.png)}
+#pattern-1 {background: url(../img/objects/1_pattern.png)}

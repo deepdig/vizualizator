@@ -1,17 +1,15 @@
-//var_dump for js
+//dump
 function dump(obj) {
     var out = '';
     for (var i in obj) {
         out += i + ": " + obj[i] + "\n";
     }
 
-    //alert(out);    
-
     var pre = document.createElement('pre');
     pre.innerHTML = out;
     document.body.appendChild(pre)
 }
-
+//start vue
 Vue.component('vizualizator', {
         template: '#vizualizator-template',
         data() {
@@ -82,7 +80,10 @@ Vue.component('vizualizator', {
                             isActive: false//флаг активного полигона
                         },                        
                     }
-                ], //end poligonsArr                
+                ], //end poligonsArr
+                imgArr: [
+                    1,2,4,5
+                ]
             }
         },
         computed: {
@@ -146,11 +147,12 @@ Vue.component('vizualizator', {
                 //создаем массив из объектов в слое
                 polygonArr = layer.children;
 
-                //перебираем полигоны, если активный то применяем цвет
+                //перебираем полигоны
                 var key;
                 for (key = 0; key < polygonArr.length; ++key) {
                     var activePolygon = polygonArr[key];
                     var activeFlag = activePolygon.attrs.isActive;
+                    //если активный то применяем цвет
                     if (activeFlag == true) {
                         //получаем цвет элемента
                         var computedStyle = getComputedStyle(e.target);                    
@@ -164,19 +166,18 @@ Vue.component('vizualizator', {
                 }                
             },
             //изменение полигона наложением паттернов (текстур)
-            changeMaterial(e) {
-                const stage = this.$refs.stage.getStage();
+            changeMaterial(e) {                
                 //получаем слой
                 const layer = this.$refs.layer.getStage();
                 //создаем массив из объектов в слое
                 polygonArr = layer.children;
 
-                //перебираем полигоны, если активный то применяем материал
+                //перебираем полигоны
                 var key;
                 for (key = 0; key < polygonArr.length; ++key) {
                     var activePolygon = polygonArr[key];
                     var activeFlag = activePolygon.attrs.isActive;                    
-                    
+                    //если активный то применяем материал
                     if (activeFlag == true) {
                         //получаем фон элемента
                         var computedStyle = getComputedStyle(e.target);                    
@@ -200,29 +201,30 @@ Vue.component('vizualizator', {
             //изменение полигона наложением фотографий элементов
             changePhoto () {                
                 //получаем слой
+                const stage = this.$refs.stage.getStage();
                 const layer = this.$refs.layer.getStage();
                 //создаем массив из объектов в слое
                 polygonArr = layer.children;
 
-                //перебираем полигоны, если активный то применяем текстуру
+                //перебираем полигоны
                 var key;
                 for (key = 0; key < polygonArr.length; ++key) {
                     var activePolygon = polygonArr[key];
-                    var activeFlag = activePolygon.attrs.isActive;    
-                    
-                    if (activeFlag == true) {
+                    var activeFlag = activePolygon.attrs.isActive;                    
+                    //если активный то применяем текстуру
+                    if (activeFlag === true) {
                         //применяем параметры к паттернам
-                        activePolygon.setFill(false).setOpacity(0.5);
-                        //Устанавливаем флаг активного цвета
-                        activePolygon.setDashEnabled(true);
-                        
-                        var imageObj = new Image();                        
+                        activePolygon.setFill(false).setOpacity(0.7);                        
+                        //добавляем картинку
+                        var imageObj = new Image();
                         imageObj.src = 'assets/img/objects/'+key+'_pattern.png';
-                        activePolygon.setFillPatternImage(imageObj);
-                        layer.draw();
+                        activePolygon.setFillPatternImage(imageObj);                        
+                        stage.draw();
+                        //Устанавливаем флаг активного цвета
+                        activePolygon.setDashEnabled(true);                        
                     }
                 }
-            },//---end.getFiles
+            },//---end.changePhoto
 
             //сброс цвета полигона
             resetColor(e) {
@@ -243,6 +245,5 @@ Vue.component('vizualizator', {
 
     new Vue({
         el: '#app',
-
     })
     
