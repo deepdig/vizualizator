@@ -81,9 +81,19 @@ Vue.component('vizualizator', {
                         },                        
                     }
                 ], //end poligonsArr
+                //массив для формирования preloads images
                 imgArr: [
                     1,2,4,5
-                ]
+                ],
+                //массив для формирования наборов текстур и вывода их на кнопки выбора
+                groopsArr: [
+                    {
+                        name: '1 Набор',
+                    },
+                    {
+                        name: '2 Набор',
+                    },
+                ],
             }
         },
         computed: {
@@ -199,15 +209,16 @@ Vue.component('vizualizator', {
             },
 
             //изменение полигона наложением фотографий элементов
-            changePhoto () {                
+            changePhoto (e) {                
                 //получаем слой
                 const stage = this.$refs.stage.getStage();
                 const layer = this.$refs.layer.getStage();
                 //создаем массив из объектов в слое
                 polygonArr = layer.children;
-
-                //перебираем полигоны
+                
+                var groop = e.target.id;                
                 var key;
+                //перебираем полигоны
                 for (key = 0; key < polygonArr.length; ++key) {
                     var activePolygon = polygonArr[key];
                     var activeFlag = activePolygon.attrs.isActive;                    
@@ -217,7 +228,7 @@ Vue.component('vizualizator', {
                         activePolygon.setFill(false).setOpacity(0.7);                        
                         //добавляем картинку
                         var imageObj = new Image();
-                        imageObj.src = 'assets/img/objects/'+key+'_pattern.png';
+                        imageObj.src = 'assets/img/objects/'+groop+'/'+key+'_pattern.png';
                         activePolygon.setFillPatternImage(imageObj);                        
                         stage.draw();
                         //Устанавливаем флаг активного цвета

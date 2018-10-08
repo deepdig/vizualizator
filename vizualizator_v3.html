@@ -15,7 +15,7 @@
     <template id="vizualizator-template">
         <div id="vizualizator-app">
             <h1>Визуализатор</h1>
-            
+            <!-- preloads images-->
             <p v-for="(item, index) in imgArr" :id="'pattern-'+index"></p>
             
             <div class="main-canvas">
@@ -35,24 +35,28 @@
 
                 <div class="toolbar-materials">
                     <h3>Наложение цвета</h3>
-                    <button v-on:click="changeColor" class="material-select material-1" id="material-1"> </button>
-                    <button v-on:click="changeColor" class="material-select material-2" id="material-2"> </button>
-                    <button v-on:click="changeColor" class="material-select material-3" id="material-3"> </button>
+                    <button v-on:click="changeColor" class="material-select material-1"> </button>
+                    <button v-on:click="changeColor" class="material-select material-2"> </button>
+                    <button v-on:click="changeColor" class="material-select material-3"> </button>
                 </div>
                 <div class="toolbar-materials">
                     <h3>Наложение паттернов</h3>
-                    <button v-on:click="changeMaterial" class="material-select material-4" id="material-4" style="background: url(assets/img/materials/Bradshaw.jpg);">
+                    <button v-on:click="changeMaterial" class="material-select" style="background: url(assets/img/materials/Bradshaw.jpg);">
                     </button>
-                    <button v-on:click="changeMaterial" class="material-select material-5" style="background: url(assets/img/materials/Zirix.jpg);">
+                    <button v-on:click="changeMaterial" class="material-select" style="background: url(assets/img/materials/Zirix.jpg);">
                     </button>
-                    <button v-on:click="changeMaterial" class="material-select material-6" style="background: url(assets/img/materials/CK230_Mykonos_Beige.jpg);">
+                    <button v-on:click="changeMaterial" class="material-select" style="background: url(assets/img/materials/CK230_Mykonos_Beige.jpg);">
                     </button>
                 </div>
                 <div class="toolbar-materials">
-                    <h3>Наложение фотографий</h3>
-                    <button v-on:click="changeMaterial" class="material-select material-7">Одно
-                        фото</button>
-                    <button v-on:click="changePhoto" class="material-select material-8">Набор фото</button>
+                    <h3>Наложение фотографий</h3>                    
+                    <button 
+                        v-on:click="changePhoto" 
+                        v-for="(item, index) in groopsArr" 
+                        :id="'material_'+index"
+                        class="material-select">
+                        {{ item.name }}
+                    </button>
                 </div>
                 <div class="toolbar-materials">
                     <h3>Общий сброс</h3>
