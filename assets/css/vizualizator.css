@@ -19,11 +19,16 @@
 	transition: .3s ease;	
 }
 .material-select:hover {border: 4px solid red;}
-.material-1 {background: red;}
-.material-2 {background: blue;}
-.material-3 {background: green;}
 /*Preloads images*/
 #pattern-0 {background: url(../img/objects/material_0/0_pattern.png)}
 #pattern-1 {background: url(../img/objects/material_0/1_pattern.png)}
 #pattern-2 {background: url(../img/objects/material_1/0_pattern.png)}
 #pattern-3 {background: url(../img/objects/material_1/1_pattern.png)}
+/*Фон кнопок*/
+.material-1 {background: red;}
+.material-2 {background: blue;}
+.material-3 {background: green;}
+
+#material_0, #material_1 {color: yellow;}
+#material_0 {background: url(../img/objects/material_0/material_0_background.jpg)}
+#material_1 {background: url(../img/objects/material_1/material_1_background.jpg)}
